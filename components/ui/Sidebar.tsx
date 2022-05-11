@@ -16,12 +16,12 @@ import { UIContext } from '../../context/ui';
 const menuItems: string[] = ['Inbox', 'Starred', 'Send Email', 'Drafts']
 
 export const Sidebar = () => {
-  const { sidemenuOpen } = useContext(UIContext)
+  const { sidemenuOpen, closeSideMenu } = useContext(UIContext)
   return (
     <Drawer
       anchor='left'
       open={sidemenuOpen}
-      onClose={() => console.log('cerrando')}
+      onClose={closeSideMenu}
     >
       <Box sx={{ width: 250 }}>
         <Box sx={{ padding: '5px 2px' }}>
