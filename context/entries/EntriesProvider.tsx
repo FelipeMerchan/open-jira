@@ -15,19 +15,19 @@ const Entries_INITIAL_STATE: EntriesState = {
   entries: [
     {
       _id: uuidv4(),
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+      description: 'Pendiente: Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
       status: 'pending',
       createdAt: Date.now(),
     },
     {
       _id: uuidv4(),
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+      description: 'En progeso: Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
       status: 'in-progress',
       createdAt: Date.now() - 1000000,
     },
     {
       _id: uuidv4(),
-      description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+      description: 'Terminadas: Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
       status: 'finished',
       createdAt: Date.now() - 100000,
     },
