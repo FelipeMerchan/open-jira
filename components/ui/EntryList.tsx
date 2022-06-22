@@ -1,9 +1,12 @@
-import { FC, useContext, useMemo, DragEvent } from "react";
-import { List, Paper } from "@mui/material";
+import { FC, useContext, useMemo, DragEvent } from 'react';
+import { List, Paper } from '@mui/material';
 
-import { EntriesContext } from "../../context/entries";
-import { EntryStatus } from "../../interfaces";
-import { EntryCard } from "./"
+import { EntriesContext } from '../../context/entries';
+import { UIContext } from '../../context/ui';
+import { EntryStatus } from '../../interfaces';
+import { EntryCard } from './'
+
+import styles from './EntryList.module.css';
 
 interface Props {
   status: EntryStatus;
@@ -11,6 +14,7 @@ interface Props {
 
 export const EntryList:FC<Props> = ({ status }) => {
   const { entries } = useContext(EntriesContext);
+  const { isDragging } = useContext(UIContext);
 
   const entriesByStatus = useMemo(() => entries.filter(entry => entry.status === status), [entries]);
 
@@ -30,6 +34,7 @@ export const EntryList:FC<Props> = ({ status }) => {
       /* En combinación del onDrop debemos especificarle a este div
       si puede estar esperando que aquí dejen caer algo: */
       onDragOver={allowDrop}
+      className={isDragging ? styles.dragging : ''}
     >
       <Paper sx={{
         height: 'calc(100vh - 180px)',
@@ -37,7 +42,7 @@ export const EntryList:FC<Props> = ({ status }) => {
         backgroundColor: 'transparent',
         padding: '1px 5px',
       }}>
-        <List sx={{ opacity: 1 }}>
+        <List sx={{ opacity: isDragging ? 0.2 : 1, transition: 'opacity .3s' }}>
           {
             entriesByStatus.map(entry => (
               <EntryCard key={entry._id} entry={entry} />
