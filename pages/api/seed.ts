@@ -1,5 +1,11 @@
+/* En producción no enviamos este archivo seed.ts al servidor.
+Lo podemos ignorar, pero creamos una copia temporal para que otros
+desarrolladores lo puedan obtener con el fin de que lo puedan usar
+en desarrollo. Este archivo seed es solo usado en desarrollo, en producción
+debemos tener mucho cuidado porque deleteMany borraría todo de la DB. */
 import { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../database";
+import { db, seedData } from "../../database";
+import { Entry } from "../../models";
 
 type Data = {
   message: string;
@@ -17,6 +23,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   await db.connect();
   /* En este espacio, entre el método connect y disconect, podemos
   hacer cualquier petición a la base de datos (lecturas, inserciones, etc)*/
+
+  /* deleteMany va a borrar de la DB todo lo que se encuentre en
+    la colección Entry: */
+  await Entry.deleteMany();
+
+  /* Inserta datos a la DB: */
+  await Entry.insertMany(seedData.entries);
   /* Desconectarse de la DB: */
   await db.disconnect();
 

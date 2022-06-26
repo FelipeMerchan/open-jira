@@ -47,6 +47,9 @@ export const connect = async () => {
 }
 
 export const disconnect = async () => {
+  /* Si estamos en desarrollo no tiene sentido que nos
+  desconectemos: */
+  if (process.env.NODE_ENV === 'development') return;
   /* Si el estado es 0 quiere decir que ya estamos
   desconectados por lo cual no es necesario realizar el procedimiendo
   await mongoose.disconnect: */
