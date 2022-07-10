@@ -2,7 +2,7 @@ import mongoose, { Model, Schema } from 'mongoose';
 import { Entry } from '../interfaces';
 
 /* La I en IEntry indica que es una interfaz: */
-interface IEntry extends Entry {
+export interface IEntry extends Entry {
 }
 
 const entrySchema = new Schema({
