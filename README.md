@@ -18,6 +18,13 @@ mongodb://localhost:27017/entriesdb
 
 Renombrar el archivo **.env.template** a **.env**
 
+* Reconstruir los modulos de Node y levantar Next.js:
+
+```
+  yarn install
+  yarn dev
+```
+
 ## Llenar la base de datos con información de pruebas
 
 Llamar:
