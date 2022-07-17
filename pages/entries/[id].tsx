@@ -1,3 +1,4 @@
+import { ChangeEvent, useState } from "react";
 import {
 	Button,
 	capitalize,
@@ -23,6 +24,22 @@ import { EntryStatus } from "../../interfaces";
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished'];
 
 const EntryPage = () => {
+	const [inputValue, setInputValue] = useState('');
+	const [status, setStatus] = useState<EntryStatus>('pending');
+	const [touched, setTouched] = useState(false);
+
+	const onInputValueChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  }
+
+	const onStatusChanged = (event: ChangeEvent<HTMLInputElement>) => {
+		setStatus(event.target.value as EntryStatus);
+	}
+
+	const onSave = () => {
+		console.log({ inputValue, status });
+	}
+
   return (
     <Layout title='... ... ...'>
 			<Grid
@@ -33,7 +50,7 @@ const EntryPage = () => {
 				<Grid item xs={12} sm={8} md={6}>
 					<Card>
 						<CardHeader
-							title='Entrada:'
+							title={`Entrada: ${inputValue}`}
 							subheader={`Creada hace: ... minutos`}
 						/>
 						<CardContent>
@@ -44,10 +61,16 @@ const EntryPage = () => {
 								autoFocus
 								multiline
 								label='Nueva entrada'
+								value={inputValue}
+								onChange={onInputValueChange}
 							/>
 							<FormControl>
 								<FormLabel>Estado: </FormLabel>
-								<RadioGroup row>
+								<RadioGroup
+									row
+									value={status}
+									onChange={onStatusChanged}
+								>
 									{
 										validStatus.map(status => (
 											<FormControlLabel
@@ -66,6 +89,7 @@ const EntryPage = () => {
 								startIcon={<SaveOutlinedIcon />}
 								variant='contained'
 								fullWidth
+								onClick={onSave}
 							>
 								Save
 							</Button>
@@ -78,7 +102,7 @@ const EntryPage = () => {
 				bottom: 30,
 				right: 30,
 				/* Para acceder a los valores del tema lo podemos hacer
-				de la siguiente forma: */
+				de la siguiente forma (solo posible cuando usamos la prop sx): */
 				backgroundColor: 'error.dark'
 			}}>
 				<DeleteOutlinedIcon />
