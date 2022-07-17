@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import {
 	Button,
 	capitalize,
@@ -27,6 +27,8 @@ const EntryPage = () => {
 	const [inputValue, setInputValue] = useState('');
 	const [status, setStatus] = useState<EntryStatus>('pending');
 	const [touched, setTouched] = useState(false);
+
+	const isNotValid = useMemo(() => inputValue.length <= 0 && touched, [inputValue, touched]);
 
 	const onInputValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -62,7 +64,10 @@ const EntryPage = () => {
 								multiline
 								label='Nueva entrada'
 								value={inputValue}
+								onBlur={() => setTouched(true)}
 								onChange={onInputValueChange}
+								helperText={isNotValid && 'Ingrese un valor'}
+								error={isNotValid}
 							/>
 							<FormControl>
 								<FormLabel>Estado: </FormLabel>
@@ -90,6 +95,11 @@ const EntryPage = () => {
 								variant='contained'
 								fullWidth
 								onClick={onSave}
+								/* no usamos isNotValid aqui: inputValue.length
+								porque no es necesario memorizar inputValue porque
+								ya esta como el state de React y en teoria esta
+								memorizado: */
+								disabled={inputValue.length <= 0}
 							>
 								Save
 							</Button>
