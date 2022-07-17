@@ -1,6 +1,5 @@
 import { ChangeEvent, FC, useMemo, useState } from "react";
 import { GetServerSideProps } from 'next';
-import { isValidObjectId } from "mongoose";
 import {
 	Button,
 	capitalize,
@@ -20,16 +19,18 @@ import {
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
+import { dbEntries } from "../../database";
 import { Layout } from "../../components/layouts";
-import { EntryStatus } from "../../interfaces";
+import { Entry, EntryStatus } from "../../interfaces";
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished'];
 
 interface Props {
-
+	entry: Entry;
 }
 
-const EntryPage:FC<Props> = () => {
+const EntryPage:FC<Props> = ({ entry }) => {
+	console.log(entry);
 	const [inputValue, setInputValue] = useState('');
 	const [status, setStatus] = useState<EntryStatus>('pending');
 	const [touched, setTouched] = useState(false);
@@ -131,8 +132,9 @@ const EntryPage:FC<Props> = () => {
 // - Only if you need to pre-render a page whose data must be fetched at request time
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 	const { id } = params as { id: string };
+	const entry = await dbEntries.getEntryById(id);
 
-	if (!isValidObjectId(id)) {
+	if (!entry) {
 		return {
 			redirect: {
 				destination: '/',
@@ -149,7 +151,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
 	return {
 		props: {
-			id
+			entry: entry.description
 		}
 	}
 }
