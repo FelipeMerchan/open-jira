@@ -1,4 +1,6 @@
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, FC, useMemo, useState } from "react";
+import { GetServerSideProps } from 'next';
+import { isValidObjectId } from "mongoose";
 import {
 	Button,
 	capitalize,
@@ -23,7 +25,11 @@ import { EntryStatus } from "../../interfaces";
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished'];
 
-const EntryPage = () => {
+interface Props {
+
+}
+
+const EntryPage:FC<Props> = () => {
 	const [inputValue, setInputValue] = useState('');
 	const [status, setStatus] = useState<EntryStatus>('pending');
 	const [touched, setTouched] = useState(false);
@@ -119,6 +125,33 @@ const EntryPage = () => {
 			</IconButton>
     </Layout>
   )
+}
+
+// You should use getServerSideProps when:
+// - Only if you need to pre-render a page whose data must be fetched at request time
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+	const { id } = params as { id: string };
+
+	if (!isValidObjectId(id)) {
+		return {
+			redirect: {
+				destination: '/',
+				/* permanent le indica a los bots de los navegadores
+				si una pagina va a funcionar o no nuevamente.
+				Si lo dejamos como true se le indicaria a los bots de los navegadores
+				que esta pagina, a la que se le hizo un redirect, jamas va
+				a funcionar (que la borren de su indice); por otro lado, si
+				dejamos el valor en false se le indica que la pagina va a seguir existiendo: */
+				permanent: false,
+			}
+		}
+	}
+
+	return {
+		props: {
+			id
+		}
+	}
 }
 
 export default EntryPage;
