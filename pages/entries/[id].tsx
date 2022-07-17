@@ -1,7 +1,26 @@
-import { Button, Card, CardActions, CardContent, CardHeader, Grid, TextField } from "@mui/material";
+import {
+	Button,
+	capitalize,
+	Card,
+	CardActions,
+	CardContent,
+	CardHeader,
+	FormControl,
+	FormControlLabel,
+	FormLabel,
+	Grid,
+	IconButton,
+	Radio,
+	RadioGroup,
+	TextField
+} from "@mui/material";
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 import { Layout } from "../../components/layouts";
+import { EntryStatus } from "../../interfaces";
+
+const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished'];
 
 const EntryPage = () => {
   return (
@@ -26,7 +45,21 @@ const EntryPage = () => {
 								multiline
 								label='Nueva entrada'
 							/>
-							{/* Radio */}
+							<FormControl>
+								<FormLabel>Estado: </FormLabel>
+								<RadioGroup row>
+									{
+										validStatus.map(status => (
+											<FormControlLabel
+												key={status}
+												value={status}
+												control={<Radio />}
+												label={capitalize(status)}
+											/>
+										))
+									}
+								</RadioGroup>
+							</FormControl>
 						</CardContent>
 						<CardActions>
 							<Button
@@ -40,6 +73,16 @@ const EntryPage = () => {
 					</Card>
 				</Grid>
 			</Grid>
+			<IconButton sx={{
+				position: 'fixed',
+				bottom: 30,
+				right: 30,
+				/* Para acceder a los valores del tema lo podemos hacer
+				de la siguiente forma: */
+				backgroundColor: 'error.dark'
+			}}>
+				<DeleteOutlinedIcon />
+			</IconButton>
     </Layout>
   )
 }
