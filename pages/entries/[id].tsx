@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useMemo, useState } from "react";
+import { ChangeEvent, FC, useContext, useMemo, useState } from "react";
 import { GetServerSideProps } from 'next';
 import {
 	Button,
@@ -22,6 +22,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { dbEntries } from "../../database";
 import { Layout } from "../../components/layouts";
 import { Entry, EntryStatus } from "../../interfaces";
+import { EntriesContext } from "../../context/entries";
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished'];
 
@@ -30,6 +31,8 @@ interface Props {
 }
 
 const EntryPage:FC<Props> = ({ entry }) => {
+	const { updateEntry } = useContext(EntriesContext);
+
 	const [inputValue, setInputValue] = useState(entry.description);
 	const [status, setStatus] = useState<EntryStatus>(entry.status);
 	const [touched, setTouched] = useState(false);
@@ -37,15 +40,23 @@ const EntryPage:FC<Props> = ({ entry }) => {
 	const isNotValid = useMemo(() => inputValue.length <= 0 && touched, [inputValue, touched]);
 
 	const onInputValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  }
+		setInputValue(event.target.value);
+	}
 
 	const onStatusChanged = (event: ChangeEvent<HTMLInputElement>) => {
 		setStatus(event.target.value as EntryStatus);
 	}
 
 	const onSave = () => {
-		console.log({ inputValue, status });
+		if (inputValue.trim().length === 0) return;
+
+		const updatedEntry: Entry = {
+			...entry,
+			status,
+			description: inputValue,
+		};
+
+		updateEntry(updatedEntry, true);
 	}
 
   return (
